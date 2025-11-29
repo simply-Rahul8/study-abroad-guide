@@ -9,7 +9,7 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Brand color palette for overseas education consultancy */
-    --background: 210 40% 98.4%; /* #F5F7FB - soft light background */
+    --background: 33 100% 97%; /* #FFF7ED - warm cream background */
     --foreground: 222 84% 5.9%; /* #0F172A - dark text for strong readability */
 
     --card: 0 0% 100%; /* #FFFFFF - pure white for cards */
