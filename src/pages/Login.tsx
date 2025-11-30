@@ -17,9 +17,10 @@ const Login = () => {
   
   return (
     <div className="min-h-screen bg-background">
+      <div className="fixed inset-0 pointer-events-none bg-gradient-to-br from-background via-background to-secondary/5 opacity-60" />
       <Header />
       
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 flex items-center justify-center">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 flex items-center justify-center relative z-10">
         <Card className="w-full max-w-md p-8 bg-surface shadow-lg">
           <div className="space-y-6">
             <div className="text-center">

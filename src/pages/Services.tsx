@@ -38,9 +38,10 @@ const services = [
 const Services = () => {
   return (
     <div className="min-h-screen bg-background">
+      <div className="fixed inset-0 pointer-events-none bg-gradient-to-br from-background via-background to-secondary/5 opacity-60" />
       <Header />
       
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             How We Help You

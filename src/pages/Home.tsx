@@ -5,10 +5,15 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Background image with 50% opacity */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50"
+        style={{ backgroundImage: "url('/Homepage%20background.jpg')" }}
+      />
       <Header />
       
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <h1 className="text-5xl md:text-6xl font-bold text-foreground leading-tight">
             Your Journey to Study Abroad{" "}
