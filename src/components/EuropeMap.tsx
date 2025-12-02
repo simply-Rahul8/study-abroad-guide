@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { MapPin } from "lucide-react";
+import { MapPin, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
+import {
+  TransformWrapper,
+  TransformComponent,
+  useControls,
+} from "react-zoom-pan-pinch";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { Button } from "@/components/ui/button";
 
 interface University {
   name: string;
@@ -138,113 +144,209 @@ const europeanCountries: CountryData[] = [
   },
 ];
 
+const ZoomControls: React.FC = () => {
+  const { zoomIn, zoomOut, resetTransform } = useControls();
+  
+  return (
+    <div className="absolute top-4 right-4 flex flex-col gap-2 z-20">
+      <Button
+        variant="secondary"
+        size="icon"
+        onClick={() => zoomIn()}
+        className="bg-card/90 backdrop-blur-sm hover:bg-card shadow-lg"
+      >
+        <ZoomIn className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="secondary"
+        size="icon"
+        onClick={() => zoomOut()}
+        className="bg-card/90 backdrop-blur-sm hover:bg-card shadow-lg"
+      >
+        <ZoomOut className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="secondary"
+        size="icon"
+        onClick={() => resetTransform()}
+        className="bg-card/90 backdrop-blur-sm hover:bg-card shadow-lg"
+      >
+        <RotateCcw className="h-4 w-4" />
+      </Button>
+    </div>
+  );
+};
+
+interface MarkerProps {
+  country: CountryData;
+  scale: number;
+}
+
+const CountryMarker: React.FC<MarkerProps> = ({ country, scale }) => {
+  const showLabel = scale >= 1;
+  const showExpanded = scale >= 1.5;
+  const markerSize = Math.max(0.6, 1 / Math.sqrt(scale));
+  
+  return (
+    <HoverCard openDelay={100} closeDelay={200}>
+      <HoverCardTrigger asChild>
+        <Link
+          to="/destinations"
+          className="absolute transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer z-10"
+          style={{ 
+            top: country.position.top, 
+            left: country.position.left,
+          }}
+        >
+          <div 
+            className="flex flex-col items-center transition-all duration-300"
+            style={{ transform: `scale(${markerSize})` }}
+          >
+            <div className={`
+              bg-primary text-primary-foreground rounded-full shadow-lg 
+              transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl 
+              group-hover:bg-primary/90
+              ${showExpanded ? 'p-2 md:p-2.5' : 'p-1.5 md:p-2'}
+            `}>
+              <MapPin className={showExpanded ? 'h-4 w-4 md:h-5 md:w-5' : 'h-3 w-3 md:h-4 md:w-4'} />
+            </div>
+            {showLabel && (
+              <span className={`
+                mt-1 font-semibold text-foreground bg-background/90 
+                px-2 py-0.5 rounded shadow-sm whitespace-nowrap
+                transition-all duration-300
+                ${showExpanded ? 'text-xs md:text-sm' : 'text-[10px] md:text-xs'}
+              `}>
+                {country.name}
+              </span>
+            )}
+          </div>
+        </Link>
+      </HoverCardTrigger>
+      <HoverCardContent 
+        className="w-72 p-4 bg-card border border-border shadow-xl z-50"
+        style={{ transform: `scale(${1 / scale})`, transformOrigin: 'top left' }}
+      >
+        <h4 className="font-semibold text-foreground mb-3 text-lg">{country.name}</h4>
+        <p className="text-xs text-muted-foreground mb-3">Top Universities:</p>
+        <ul className="space-y-2">
+          {country.universities.map((uni) => (
+            <li key={uni.name}>
+              <a
+                href={uni.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-primary hover:underline flex items-center gap-1"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {uni.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p className="text-xs text-muted-foreground mt-3 italic">
+          Click to view all destinations →
+        </p>
+      </HoverCardContent>
+    </HoverCard>
+  );
+};
+
 const WorldMap: React.FC = () => {
+  const [scale, setScale] = useState(1);
+
+  const handleTransform = useCallback((ref: any) => {
+    setScale(ref.state.scale);
+  }, []);
+
   return (
     <div className="w-full py-12">
       <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-4">
         Explore European Destinations
       </h2>
-      <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
+      <p className="text-center text-muted-foreground mb-4 max-w-2xl mx-auto">
         Hover over a country to see top universities. Click to explore all destinations.
       </p>
+      <p className="text-center text-sm text-muted-foreground mb-8">
+        Use scroll wheel or pinch to zoom • Drag to pan • Use controls on the right
+      </p>
       
-      <div className="relative w-full max-w-5xl mx-auto aspect-[2/1]">
-        {/* Transparent World Map SVG */}
-        <svg
-          viewBox="0 0 1000 500"
-          className="w-full h-full"
-          style={{ opacity: 0.6 }}
+      <div className="relative w-full max-w-5xl mx-auto bg-card/95 backdrop-blur-sm rounded-3xl border-2 border-border shadow-2xl overflow-hidden">
+        <TransformWrapper
+          initialScale={1}
+          minScale={0.5}
+          maxScale={4}
+          onTransformed={handleTransform}
+          wheel={{ step: 0.1 }}
+          doubleClick={{ mode: "zoomIn" }}
+          panning={{ velocityDisabled: true }}
         >
-          {/* World Map Paths - Detailed continents */}
-          <g fill="none" stroke="hsl(var(--primary))" strokeWidth="0.8" opacity="0.7">
-            {/* North America */}
-            <path d="M150,120 Q180,100 220,110 Q260,95 300,105 Q320,90 340,100 L350,130 Q360,150 350,180 L340,200 Q320,220 300,230 L280,240 Q250,250 220,240 L190,230 Q160,220 150,200 L140,170 Q130,140 150,120" />
-            <path d="M200,230 Q220,260 210,290 L190,310 Q170,330 150,320 L140,300 Q130,280 140,260 L160,240 Q180,230 200,230" />
-            
-            {/* South America */}
-            <path d="M250,320 Q270,310 290,320 L310,340 Q330,370 320,400 L310,430 Q300,460 280,470 L260,475 Q240,480 230,460 L220,430 Q210,400 220,370 L230,340 Q240,320 250,320" />
-            
-            {/* Africa */}
-            <path d="M470,280 Q500,260 530,270 L560,280 Q590,290 600,320 L605,360 Q610,400 590,430 L570,460 Q540,480 510,470 L480,450 Q450,430 440,400 L435,360 Q430,320 450,290 Q460,280 470,280" />
-            
-            {/* Europe - More detailed */}
-            <path d="M440,140 Q460,120 490,125 L520,130 Q550,125 570,140 L590,150 Q610,160 620,180 L625,200 Q630,220 620,240 L600,260 Q580,275 550,270 L520,265 Q490,270 470,260 L450,250 Q430,240 425,220 L420,190 Q415,160 440,140" />
-            {/* UK & Ireland */}
-            <path d="M430,160 Q440,150 450,155 L455,165 Q460,175 455,185 L445,190 Q435,195 430,185 L425,175 Q420,165 430,160" />
-            {/* Scandinavia */}
-            <path d="M500,100 Q520,80 540,90 L555,100 Q570,110 565,130 L555,150 Q545,165 530,160 L515,150 Q500,140 495,125 L495,115 Q495,105 500,100" />
-            
-            {/* Asia */}
-            <path d="M620,120 Q680,100 740,110 L800,120 Q860,130 900,160 L920,190 Q940,230 920,270 L890,300 Q850,330 800,340 L740,345 Q680,350 640,330 L610,300 Q580,270 590,230 L600,190 Q610,150 620,120" />
-            {/* India */}
-            <path d="M700,260 Q720,250 740,260 L755,280 Q770,310 760,340 L745,365 Q730,385 710,380 L695,365 Q680,345 685,320 L690,290 Q695,270 700,260" />
-            
-            {/* Australia */}
-            <path d="M800,380 Q840,370 880,380 L910,400 Q940,420 930,450 L910,470 Q880,490 840,485 L810,475 Q780,460 780,430 L785,405 Q790,385 800,380" />
-            
-            {/* Antarctica hint */}
-            <path d="M200,490 Q400,480 600,485 Q800,480 900,490" strokeDasharray="5,5" />
-          </g>
-          
-          {/* Grid lines for detail */}
-          <g stroke="hsl(var(--primary))" strokeWidth="0.3" opacity="0.3">
-            {/* Latitude lines */}
-            <line x1="50" y1="125" x2="950" y2="125" />
-            <line x1="50" y1="250" x2="950" y2="250" />
-            <line x1="50" y1="375" x2="950" y2="375" />
-            {/* Longitude lines */}
-            <line x1="250" y1="50" x2="250" y2="480" />
-            <line x1="500" y1="50" x2="500" y2="480" />
-            <line x1="750" y1="50" x2="750" y2="480" />
-          </g>
-          
-          {/* Equator */}
-          <line x1="50" y1="250" x2="950" y2="250" stroke="hsl(var(--primary))" strokeWidth="0.5" opacity="0.5" strokeDasharray="10,5" />
-        </svg>
-
-        {/* Country markers positioned on the map */}
-        {europeanCountries.map((country) => (
-          <HoverCard key={country.name} openDelay={100} closeDelay={200}>
-            <HoverCardTrigger asChild>
-              <Link
-                to="/destinations"
-                className="absolute transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer z-10"
-                style={{ top: country.position.top, left: country.position.left }}
+          <ZoomControls />
+          <TransformComponent
+            wrapperStyle={{ width: "100%", height: "100%" }}
+            contentStyle={{ width: "100%", height: "100%" }}
+          >
+            <div className="relative w-full aspect-[2/1]">
+              {/* Transparent World Map SVG */}
+              <svg
+                viewBox="0 0 1000 500"
+                className="w-full h-full"
+                style={{ opacity: 0.6 }}
               >
-                <div className="flex flex-col items-center">
-                  <div className="bg-primary text-primary-foreground p-1.5 md:p-2 rounded-full shadow-lg transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:bg-primary/90 animate-pulse">
-                    <MapPin className="h-3 w-3 md:h-4 md:w-4" />
-                  </div>
-                  <span className="mt-1 text-[10px] md:text-xs font-semibold text-foreground bg-background/80 px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap">
-                    {country.name}
-                  </span>
-                </div>
-              </Link>
-            </HoverCardTrigger>
-            <HoverCardContent className="w-72 p-4 bg-card border border-border shadow-xl z-50">
-              <h4 className="font-semibold text-foreground mb-3 text-lg">{country.name}</h4>
-              <p className="text-xs text-muted-foreground mb-3">Top Universities:</p>
-              <ul className="space-y-2">
-                {country.universities.map((uni) => (
-                  <li key={uni.name}>
-                    <a
-                      href={uni.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-primary hover:underline flex items-center gap-1"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {uni.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-              <p className="text-xs text-muted-foreground mt-3 italic">
-                Click to view all destinations →
-              </p>
-            </HoverCardContent>
-          </HoverCard>
-        ))}
+                {/* World Map Paths - Detailed continents */}
+                <g fill="none" stroke="hsl(var(--primary))" strokeWidth="0.8" opacity="0.7">
+                  {/* North America */}
+                  <path d="M150,120 Q180,100 220,110 Q260,95 300,105 Q320,90 340,100 L350,130 Q360,150 350,180 L340,200 Q320,220 300,230 L280,240 Q250,250 220,240 L190,230 Q160,220 150,200 L140,170 Q130,140 150,120" />
+                  <path d="M200,230 Q220,260 210,290 L190,310 Q170,330 150,320 L140,300 Q130,280 140,260 L160,240 Q180,230 200,230" />
+                  
+                  {/* South America */}
+                  <path d="M250,320 Q270,310 290,320 L310,340 Q330,370 320,400 L310,430 Q300,460 280,470 L260,475 Q240,480 230,460 L220,430 Q210,400 220,370 L230,340 Q240,320 250,320" />
+                  
+                  {/* Africa */}
+                  <path d="M470,280 Q500,260 530,270 L560,280 Q590,290 600,320 L605,360 Q610,400 590,430 L570,460 Q540,480 510,470 L480,450 Q450,430 440,400 L435,360 Q430,320 450,290 Q460,280 470,280" />
+                  
+                  {/* Europe - More detailed */}
+                  <path d="M440,140 Q460,120 490,125 L520,130 Q550,125 570,140 L590,150 Q610,160 620,180 L625,200 Q630,220 620,240 L600,260 Q580,275 550,270 L520,265 Q490,270 470,260 L450,250 Q430,240 425,220 L420,190 Q415,160 440,140" />
+                  {/* UK & Ireland */}
+                  <path d="M430,160 Q440,150 450,155 L455,165 Q460,175 455,185 L445,190 Q435,195 430,185 L425,175 Q420,165 430,160" />
+                  {/* Scandinavia */}
+                  <path d="M500,100 Q520,80 540,90 L555,100 Q570,110 565,130 L555,150 Q545,165 530,160 L515,150 Q500,140 495,125 L495,115 Q495,105 500,100" />
+                  
+                  {/* Asia */}
+                  <path d="M620,120 Q680,100 740,110 L800,120 Q860,130 900,160 L920,190 Q940,230 920,270 L890,300 Q850,330 800,340 L740,345 Q680,350 640,330 L610,300 Q580,270 590,230 L600,190 Q610,150 620,120" />
+                  {/* India */}
+                  <path d="M700,260 Q720,250 740,260 L755,280 Q770,310 760,340 L745,365 Q730,385 710,380 L695,365 Q680,345 685,320 L690,290 Q695,270 700,260" />
+                  
+                  {/* Australia */}
+                  <path d="M800,380 Q840,370 880,380 L910,400 Q940,420 930,450 L910,470 Q880,490 840,485 L810,475 Q780,460 780,430 L785,405 Q790,385 800,380" />
+                  
+                  {/* Antarctica hint */}
+                  <path d="M200,490 Q400,480 600,485 Q800,480 900,490" strokeDasharray="5,5" />
+                </g>
+                
+                {/* Grid lines for detail */}
+                <g stroke="hsl(var(--primary))" strokeWidth="0.3" opacity="0.3">
+                  {/* Latitude lines */}
+                  <line x1="50" y1="125" x2="950" y2="125" />
+                  <line x1="50" y1="250" x2="950" y2="250" />
+                  <line x1="50" y1="375" x2="950" y2="375" />
+                  {/* Longitude lines */}
+                  <line x1="250" y1="50" x2="250" y2="480" />
+                  <line x1="500" y1="50" x2="500" y2="480" />
+                  <line x1="750" y1="50" x2="750" y2="480" />
+                </g>
+                
+                {/* Equator */}
+                <line x1="50" y1="250" x2="950" y2="250" stroke="hsl(var(--primary))" strokeWidth="0.5" opacity="0.5" strokeDasharray="10,5" />
+              </svg>
+
+              {/* Country markers positioned on the map */}
+              {europeanCountries.map((country) => (
+                <CountryMarker key={country.name} country={country} scale={scale} />
+              ))}
+            </div>
+          </TransformComponent>
+        </TransformWrapper>
       </div>
     </div>
   );
