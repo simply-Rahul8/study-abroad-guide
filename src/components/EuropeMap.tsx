@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { MapPin } from "lucide-react";
 import {
@@ -21,7 +21,7 @@ interface CountryData {
 const europeanCountries: CountryData[] = [
   {
     name: "Sweden",
-    position: { top: "18%", left: "52%" },
+    position: { top: "28%", left: "54%" },
     universities: [
       { name: "BTH Karlskrona University", website: "https://www.bth.se" },
       { name: "KTH Royal Institute of Technology", website: "https://www.kth.se" },
@@ -30,7 +30,7 @@ const europeanCountries: CountryData[] = [
   },
   {
     name: "Norway",
-    position: { top: "15%", left: "45%" },
+    position: { top: "25%", left: "50%" },
     universities: [
       { name: "University of Oslo", website: "https://www.uio.no/english/" },
       { name: "NTNU", website: "https://www.ntnu.edu/" },
@@ -39,7 +39,7 @@ const europeanCountries: CountryData[] = [
   },
   {
     name: "Germany",
-    position: { top: "42%", left: "48%" },
+    position: { top: "42%", left: "52%" },
     universities: [
       { name: "TU Munich", website: "https://www.tum.de/en/" },
       { name: "LMU Munich", website: "https://www.lmu.de/en/" },
@@ -48,7 +48,7 @@ const europeanCountries: CountryData[] = [
   },
   {
     name: "Netherlands",
-    position: { top: "38%", left: "42%" },
+    position: { top: "40%", left: "49%" },
     universities: [
       { name: "TU Delft", website: "https://www.tudelft.nl/en/" },
       { name: "University of Amsterdam", website: "https://www.uva.nl/en" },
@@ -57,7 +57,7 @@ const europeanCountries: CountryData[] = [
   },
   {
     name: "France",
-    position: { top: "52%", left: "38%" },
+    position: { top: "48%", left: "47%" },
     universities: [
       { name: "Sorbonne University", website: "https://www.sorbonne-universite.fr/en" },
       { name: "PSL University", website: "https://www.psl.eu/en" },
@@ -66,7 +66,7 @@ const europeanCountries: CountryData[] = [
   },
   {
     name: "Spain",
-    position: { top: "68%", left: "32%" },
+    position: { top: "55%", left: "44%" },
     universities: [
       { name: "University of Barcelona", website: "https://www.ub.edu/web/portal/en/" },
       { name: "Complutense University of Madrid", website: "https://www.ucm.es/english" },
@@ -75,7 +75,7 @@ const europeanCountries: CountryData[] = [
   },
   {
     name: "Italy",
-    position: { top: "58%", left: "50%" },
+    position: { top: "50%", left: "53%" },
     universities: [
       { name: "University of Bologna", website: "https://www.unibo.it/en" },
       { name: "Politecnico di Milano", website: "https://www.polimi.it/en" },
@@ -84,7 +84,7 @@ const europeanCountries: CountryData[] = [
   },
   {
     name: "Portugal",
-    position: { top: "65%", left: "25%" },
+    position: { top: "52%", left: "41%" },
     universities: [
       { name: "University of Lisbon", website: "https://www.ulisboa.pt/en" },
       { name: "University of Porto", website: "https://www.up.pt/portal/en/" },
@@ -93,7 +93,7 @@ const europeanCountries: CountryData[] = [
   },
   {
     name: "Ireland",
-    position: { top: "32%", left: "28%" },
+    position: { top: "36%", left: "43%" },
     universities: [
       { name: "Trinity College Dublin", website: "https://www.tcd.ie/" },
       { name: "University College Dublin", website: "https://www.ucd.ie/" },
@@ -102,7 +102,7 @@ const europeanCountries: CountryData[] = [
   },
   {
     name: "Finland",
-    position: { top: "12%", left: "58%" },
+    position: { top: "22%", left: "58%" },
     universities: [
       { name: "University of Helsinki", website: "https://www.helsinki.fi/en" },
       { name: "Aalto University", website: "https://www.aalto.fi/en" },
@@ -111,7 +111,7 @@ const europeanCountries: CountryData[] = [
   },
   {
     name: "Belgium",
-    position: { top: "40%", left: "40%" },
+    position: { top: "42%", left: "48%" },
     universities: [
       { name: "KU Leuven", website: "https://www.kuleuven.be/kuleuven" },
       { name: "Ghent University", website: "https://www.ugent.be/en" },
@@ -120,7 +120,7 @@ const europeanCountries: CountryData[] = [
   },
   {
     name: "Switzerland",
-    position: { top: "50%", left: "44%" },
+    position: { top: "46%", left: "50%" },
     universities: [
       { name: "ETH Zurich", website: "https://ethz.ch/en.html" },
       { name: "EPFL", website: "https://www.epfl.ch/en/" },
@@ -129,7 +129,7 @@ const europeanCountries: CountryData[] = [
   },
   {
     name: "Austria",
-    position: { top: "48%", left: "52%" },
+    position: { top: "44%", left: "54%" },
     universities: [
       { name: "University of Vienna", website: "https://www.univie.ac.at/en/" },
       { name: "TU Wien", website: "https://www.tuwien.at/en/" },
@@ -138,32 +138,71 @@ const europeanCountries: CountryData[] = [
   },
 ];
 
-const EuropeMap: React.FC = () => {
+const WorldMap: React.FC = () => {
   return (
     <div className="w-full py-12">
-      <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-8">
+      <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-4">
         Explore European Destinations
       </h2>
       <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
         Hover over a country to see top universities. Click to explore all destinations.
       </p>
       
-      <div className="relative w-full max-w-5xl mx-auto aspect-[4/3] bg-card/95 backdrop-blur-sm rounded-3xl border-2 border-border shadow-2xl overflow-hidden">
-        {/* Background map outline */}
-        <div className="absolute inset-0 opacity-20">
-          <svg viewBox="0 0 800 600" className="w-full h-full">
-            {/* Simplified Europe outline */}
-            <path
-              d="M150,200 Q200,150 280,180 Q350,120 420,150 Q500,100 580,140 Q650,120 700,180 Q720,250 680,320 Q700,400 650,450 Q580,500 500,480 Q420,520 350,480 Q280,500 220,450 Q150,400 160,320 Q120,250 150,200"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="text-primary/30"
-            />
-          </svg>
-        </div>
+      <div className="relative w-full max-w-5xl mx-auto aspect-[2/1]">
+        {/* Transparent World Map SVG */}
+        <svg
+          viewBox="0 0 1000 500"
+          className="w-full h-full"
+          style={{ opacity: 0.6 }}
+        >
+          {/* World Map Paths - Detailed continents */}
+          <g fill="none" stroke="hsl(var(--primary))" strokeWidth="0.8" opacity="0.7">
+            {/* North America */}
+            <path d="M150,120 Q180,100 220,110 Q260,95 300,105 Q320,90 340,100 L350,130 Q360,150 350,180 L340,200 Q320,220 300,230 L280,240 Q250,250 220,240 L190,230 Q160,220 150,200 L140,170 Q130,140 150,120" />
+            <path d="M200,230 Q220,260 210,290 L190,310 Q170,330 150,320 L140,300 Q130,280 140,260 L160,240 Q180,230 200,230" />
+            
+            {/* South America */}
+            <path d="M250,320 Q270,310 290,320 L310,340 Q330,370 320,400 L310,430 Q300,460 280,470 L260,475 Q240,480 230,460 L220,430 Q210,400 220,370 L230,340 Q240,320 250,320" />
+            
+            {/* Africa */}
+            <path d="M470,280 Q500,260 530,270 L560,280 Q590,290 600,320 L605,360 Q610,400 590,430 L570,460 Q540,480 510,470 L480,450 Q450,430 440,400 L435,360 Q430,320 450,290 Q460,280 470,280" />
+            
+            {/* Europe - More detailed */}
+            <path d="M440,140 Q460,120 490,125 L520,130 Q550,125 570,140 L590,150 Q610,160 620,180 L625,200 Q630,220 620,240 L600,260 Q580,275 550,270 L520,265 Q490,270 470,260 L450,250 Q430,240 425,220 L420,190 Q415,160 440,140" />
+            {/* UK & Ireland */}
+            <path d="M430,160 Q440,150 450,155 L455,165 Q460,175 455,185 L445,190 Q435,195 430,185 L425,175 Q420,165 430,160" />
+            {/* Scandinavia */}
+            <path d="M500,100 Q520,80 540,90 L555,100 Q570,110 565,130 L555,150 Q545,165 530,160 L515,150 Q500,140 495,125 L495,115 Q495,105 500,100" />
+            
+            {/* Asia */}
+            <path d="M620,120 Q680,100 740,110 L800,120 Q860,130 900,160 L920,190 Q940,230 920,270 L890,300 Q850,330 800,340 L740,345 Q680,350 640,330 L610,300 Q580,270 590,230 L600,190 Q610,150 620,120" />
+            {/* India */}
+            <path d="M700,260 Q720,250 740,260 L755,280 Q770,310 760,340 L745,365 Q730,385 710,380 L695,365 Q680,345 685,320 L690,290 Q695,270 700,260" />
+            
+            {/* Australia */}
+            <path d="M800,380 Q840,370 880,380 L910,400 Q940,420 930,450 L910,470 Q880,490 840,485 L810,475 Q780,460 780,430 L785,405 Q790,385 800,380" />
+            
+            {/* Antarctica hint */}
+            <path d="M200,490 Q400,480 600,485 Q800,480 900,490" strokeDasharray="5,5" />
+          </g>
+          
+          {/* Grid lines for detail */}
+          <g stroke="hsl(var(--primary))" strokeWidth="0.3" opacity="0.3">
+            {/* Latitude lines */}
+            <line x1="50" y1="125" x2="950" y2="125" />
+            <line x1="50" y1="250" x2="950" y2="250" />
+            <line x1="50" y1="375" x2="950" y2="375" />
+            {/* Longitude lines */}
+            <line x1="250" y1="50" x2="250" y2="480" />
+            <line x1="500" y1="50" x2="500" y2="480" />
+            <line x1="750" y1="50" x2="750" y2="480" />
+          </g>
+          
+          {/* Equator */}
+          <line x1="50" y1="250" x2="950" y2="250" stroke="hsl(var(--primary))" strokeWidth="0.5" opacity="0.5" strokeDasharray="10,5" />
+        </svg>
 
-        {/* Country markers */}
+        {/* Country markers positioned on the map */}
         {europeanCountries.map((country) => (
           <HoverCard key={country.name} openDelay={100} closeDelay={200}>
             <HoverCardTrigger asChild>
@@ -173,10 +212,10 @@ const EuropeMap: React.FC = () => {
                 style={{ top: country.position.top, left: country.position.left }}
               >
                 <div className="flex flex-col items-center">
-                  <div className="bg-primary text-primary-foreground p-2 rounded-full shadow-lg transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:bg-primary/90">
-                    <MapPin className="h-4 w-4 md:h-5 md:w-5" />
+                  <div className="bg-primary text-primary-foreground p-1.5 md:p-2 rounded-full shadow-lg transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:bg-primary/90 animate-pulse">
+                    <MapPin className="h-3 w-3 md:h-4 md:w-4" />
                   </div>
-                  <span className="mt-1 text-xs md:text-sm font-medium text-foreground bg-background/90 px-2 py-0.5 rounded shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <span className="mt-1 text-[10px] md:text-xs font-semibold text-foreground bg-background/80 px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap">
                     {country.name}
                   </span>
                 </div>
@@ -211,4 +250,4 @@ const EuropeMap: React.FC = () => {
   );
 };
 
-export default EuropeMap;
+export default WorldMap;
