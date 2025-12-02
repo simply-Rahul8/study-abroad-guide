@@ -51,14 +51,6 @@ const Header = () => {
                 Contact
               </Button>
             </Link>
-            <Link to="/login">
-              <Button 
-                variant={isActive("/login") ? "default" : "outline"}
-                className="ml-2"
-              >
-                Login
-              </Button>
-            </Link>
           </nav>
         </div>
       </div>

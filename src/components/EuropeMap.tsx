@@ -148,7 +148,7 @@ const EuropeMap: React.FC = () => {
         Hover over a country to see top universities. Click to explore all destinations.
       </p>
       
-      <div className="relative w-full max-w-4xl mx-auto aspect-[4/3] bg-gradient-to-br from-primary/5 to-secondary/10 rounded-3xl border border-border/50 shadow-lg overflow-hidden">
+      <div className="relative w-full max-w-5xl mx-auto aspect-[4/3] bg-card/95 backdrop-blur-sm rounded-3xl border-2 border-border shadow-2xl overflow-hidden">
         {/* Background map outline */}
         <div className="absolute inset-0 opacity-20">
           <svg viewBox="0 0 800 600" className="w-full h-full">

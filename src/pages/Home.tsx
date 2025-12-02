@@ -7,11 +7,13 @@ import EuropeMap from "@/components/EuropeMap";
 const Home = () => {
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Background image with 50% opacity */}
+      {/* Background image - full cover with gradient overlay */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/Homepage%20background.jpg')" }}
       />
+      {/* Gradient overlay for better readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background/80" />
       <Header />
       
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
