@@ -1,7 +1,8 @@
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
+import EuropeMap from "@/components/EuropeMap";
 
 const Home = () => {
   return (
@@ -21,7 +22,7 @@ const Home = () => {
           </h1>
           
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Expert guidance and personalized support to help you achieve your dream of studying at top universities worldwide.
+            Expert guidance and personalized support to help you achieve your dream of studying at top universities across European countries.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
@@ -35,7 +36,17 @@ const Home = () => {
                 Explore Destinations
               </Button>
             </Link>
+            <Link to="/contact">
+              <Button size="lg" variant="secondary" className="gap-2">
+                <Phone className="h-4 w-4" /> Contact Us
+              </Button>
+            </Link>
           </div>
+        </div>
+        
+        {/* European Map Section */}
+        <div className="mt-20">
+          <EuropeMap />
         </div>
       </main>
     </div>

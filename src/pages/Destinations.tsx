@@ -25,10 +25,10 @@ const destinations: Destination[] = [
     tagline: "Innovation-driven education with excellent quality of life.",
     universityList: [
       {
-        name: "Lund University",
-        website: "https://www.lunduniversity.lu.se",
+        name: "BTH Karlskrona University",
+        website: "https://www.bth.se",
         description:
-          "Top-ranked Scandinavian university with strong engineering, medicine, and social sciences. Very international campus with many English-taught programmes.",
+          "Blekinge Institute of Technology (BTH) in Karlskrona, specializing in applied IT, software engineering, and sustainable development with strong industry partnerships.",
       },
       {
         name: "KTH Royal Institute of Technology",
@@ -279,10 +279,10 @@ const destinations: Destination[] = [
     ],
   },
   {
-  country: "Portugal",
-  image:
-    "https://source.unsplash.com/1200x800/?lisbon,university,campus",
-  tagline: "Atlantic lifestyle with affordable, high-quality study options.",
+    country: "Portugal",
+    image:
+      "https://images.unsplash.com/photo-1585208798174-6cedd86e019a?auto=format&fit=crop&w=1200&q=80",
+    tagline: "Atlantic lifestyle with affordable, high-quality study options.",
   universityList: [
     {
       name: "University of Lisbon",
